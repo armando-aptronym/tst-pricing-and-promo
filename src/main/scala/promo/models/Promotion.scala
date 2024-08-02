@@ -21,6 +21,24 @@ final case class Promotion(
                     .toSeq
                     .map(_.toSeq)
                     .map(PromotionCombo.apply)
+
+    final def allValidCombosIterative(otherPromotions: Seq[Promotion]): Seq[PromotionCombo] =
+        val accumulatedCombos: Set[Set[String]] = otherPromotions.foldLeft(Set.empty[Set[String]]) {
+            (acc, currentPromotion) =>
+                val newCombos = acc.flatMap { newCombo =>
+                    if (newCombo.forall(promotionCode => !currentPromotion.notCombinableWith.contains(promotionCode))) {
+                        Some(newCombo + currentPromotion.code)
+                    } else {
+                        None
+                    }
+                }
+                (acc ++ newCombos + Set(currentPromotion.code)).filter { combo =>
+                    !acc.exists(otherCombo => otherCombo != combo && combo.subsetOf(otherCombo))
+                }
+        }
+        accumulatedCombos
+            .map(combo => PromotionCombo(combo.toSeq))
+            .toSeq
 }
 
 object Promotion {

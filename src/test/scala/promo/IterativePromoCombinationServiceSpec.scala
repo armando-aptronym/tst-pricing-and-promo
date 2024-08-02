@@ -8,7 +8,7 @@ import com.tst.promo.models.{Promotion, PromotionCombo}
 
 import org.scalatest.funsuite.AnyFunSuite
 
-class PromoCombinationServiceSpec extends AnyFunSuite {
+class IterativePromoCombinationServiceSpec extends AnyFunSuite {
 
     private val testPromotions: Seq[Promotion] = Seq(
       Promotion("P1", Seq("P3")),
@@ -25,7 +25,7 @@ class PromoCombinationServiceSpec extends AnyFunSuite {
           PromotionCombo(Seq("P3", "P4", "P5"))
         )
         val actualCombinablePromotions: Seq[PromotionCombo]   =
-            PromoCombinationService.allCombinablePromotions(testPromotions)
+            IterativePromoCombinationService.allCombinablePromotions(testPromotions)
 
         assert(actualCombinablePromotions.nonEmpty)
         assert(actualCombinablePromotions.size == expectedCombinablePromotions.size)
@@ -38,7 +38,7 @@ class PromoCombinationServiceSpec extends AnyFunSuite {
         )
         val targetPromotionCode: String                       = "P1"
         val actualCombinablePromotions: Seq[PromotionCombo]   =
-            PromoCombinationService.combinablePromotions(targetPromotionCode, testPromotions)
+            IterativePromoCombinationService.combinablePromotions(targetPromotionCode, testPromotions)
 
         assert(actualCombinablePromotions.nonEmpty)
         assert(actualCombinablePromotions.size == expectedCombinablePromotions.size)
@@ -52,7 +52,7 @@ class PromoCombinationServiceSpec extends AnyFunSuite {
         )
 
         val actualCombinablePromotions: Seq[PromotionCombo] =
-            PromoCombinationService.combinablePromotions(targetPromotionCode, testPromotions)
+            IterativePromoCombinationService.combinablePromotions(targetPromotionCode, testPromotions)
 
         assert(actualCombinablePromotions.nonEmpty)
         assert(actualCombinablePromotions.size == expectedCombinablePromotions.size)
@@ -62,17 +62,17 @@ class PromoCombinationServiceSpec extends AnyFunSuite {
       "should successfully return empty collection of other combinable promotions if a given promotion has no other combinable promotions"
     ) {
         val targetPromotionCode: String = "DNE"
-        assert(PromoCombinationService.combinablePromotions(targetPromotionCode, testPromotions).isEmpty)
+        assert(IterativePromoCombinationService.combinablePromotions(targetPromotionCode, testPromotions).isEmpty)
     }
     test(
       "should successfully return empty collection of other combinable promotions if an empty set of allPromotions is input"
     ) {
         val targetPromotionCode: String = "ANY"
-        assert(PromoCombinationService.combinablePromotions(targetPromotionCode, Seq.empty[Promotion]).isEmpty)
+        assert(IterativePromoCombinationService.combinablePromotions(targetPromotionCode, Seq.empty[Promotion]).isEmpty)
     }
     test(
       "should successfully return empty collection of all possibly combinable promotions if an empty set of promotions is input"
     ) {
-        assert(PromoCombinationService.allCombinablePromotions(Seq.empty[Promotion]).isEmpty)
+        assert(IterativePromoCombinationService.allCombinablePromotions(Seq.empty[Promotion]).isEmpty)
     }
 }
