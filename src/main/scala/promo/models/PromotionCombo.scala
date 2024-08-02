@@ -10,4 +10,9 @@ final case class PromotionCombo(
         otherCombos.exists(otherCombo =>
             otherCombo.promotionCodes.containsSlice(this.promotionCodes) && (otherCombo != this)
         )
+
+    override def equals(other: Any): Boolean = other match
+        case PromotionCombo(promotionCodes) =>
+            promotionCodes.toSet == this.promotionCodes.toSet
+        case _                              => false
 }
